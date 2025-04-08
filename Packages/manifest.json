@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-    "com.microsoft.mrtk.graphicstools.unity": "file:E:/ProjectFiles/Unity/SampleProject/MRSample-Unity-main/PicoMRDemo/Packages/com.microsoft.mrtk.graphicstools.unity",
+    "com.microsoft.mrtk.graphicstools.unity": "file:../LocalPackages/com.microsoft.mrtk.graphicstools.unity",
     "com.unity.collab-proxy": "2.0.1",
     "com.unity.feature.ar": "1.0.0",
     "com.unity.feature.development": "1.0.1",
@@ -9,7 +9,7 @@
     "com.unity.ide.visualstudio": "2.0.17",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
-    "com.unity.pico.livepreview": "file:E:/Plugins/Unity/Unity Live Preview Plugin-1.0.5-20250211",
+    "com.unity.pico.livepreview": "file:../LocalPackages/Unity Live Preview Plugin-1.0.5-20250211",
     "com.unity.render-pipelines.universal": "12.1.10",
     "com.unity.test-framework": "1.1.31",
     "com.unity.textmeshpro": "3.0.6",
@@ -18,7 +18,7 @@
     "com.unity.visualscripting": "1.8.0",
     "com.unity.xr.interaction.toolkit": "2.2.0",
     "com.unity.xr.openxr": "1.6.0",
-    "com.unity.xr.picoxr": "file:E:/Plugins/Unity/PICO Unity Integration SDK_3.1.0",
+    "com.unity.xr.picoxr": "file:../LocalPackages/PICO Unity Integration SDK_3.1.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",

@@ -8,7 +8,7 @@
       "hash": "06067cd4c83e372310d6f79d1c625f6870ff7a2a"
     },
     "com.microsoft.mrtk.graphicstools.unity": {
-      "version": "file:./LocalPackages/com.microsoft.mrtk.graphicstools.unity",
+      "version": "file:../LocalPackages/com.microsoft.mrtk.graphicstools.unity",
       "depth": 0,
       "source": "local",
       "dependencies": {}
@@ -126,7 +126,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.pico.livepreview": {
-      "version": "file:./LocalPackages/Unity Live Preview Plugin-1.0.5-20250211",
+      "version": "file:../LocalPackages/Unity Live Preview Plugin-1.0.5-20250211",
       "depth": 0,
       "source": "local",
       "dependencies": {
@@ -385,7 +385,7 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.xr.picoxr": {
-      "version": "file:./LocalPackages/PICO Unity Integration SDK_3.1.0",
+      "version": "file:../LocalPackages/PICO Unity Integration SDK_3.1.0",
       "depth": 0,
       "source": "local",
       "dependencies": {
