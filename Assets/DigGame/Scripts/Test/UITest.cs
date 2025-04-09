@@ -46,17 +46,17 @@ public class UITest : MonoBehaviour
     }
     private void CreatePrefab1(SelectExitEventArgs arg0)
     {
-        var go = Game.instance.ResourcesLoader.LoadAsset(1,new Vector3(0,0,0),Quaternion.identity) as GameObject; 
+        var go = Game.instance.ResourcesLoader.LoadAsset(1,new Vector3(1,1,0),Quaternion.identity) as GameObject; 
         _ = Game.instance.EntityManager.CreateAndAddEntity(go);
     }
     private  void CreatePrefab2(SelectExitEventArgs arg0)
     {
-        var go = Game.instance.ResourcesLoader.LoadAsset(2,new Vector3(10,0,0),Quaternion.identity) as GameObject; 
+        var go = Game.instance.ResourcesLoader.LoadAsset(2,new Vector3(0,1,0),Quaternion.identity) as GameObject; 
          _ = Game.instance.EntityManager.CreateAndAddEntity(go);
     }
     private  void CreatePrefab3(SelectExitEventArgs arg0)
     {
-        var go = Game.instance.ResourcesLoader.LoadAsset(3,new Vector3(0,0,10),Quaternion.identity) as GameObject; 
+        var go = Game.instance.ResourcesLoader.LoadAsset(3,new Vector3(1,1,1),Quaternion.identity) as GameObject; 
          _ = Game.instance.EntityManager.CreateAndAddEntity(go);
     }
 

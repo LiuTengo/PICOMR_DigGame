@@ -27,7 +27,7 @@ namespace Test.Scripts.ResourcesLoader
     /// </summary>
     public static class PersistentLoader
     {
-        private static readonly string dataPath = Path.Combine(Application.persistentDataPath, "DigGameData.json");
+        private static readonly string dataPath = Path.Combine(Application.persistentDataPath, "DigGameData01.json");
         public static Dictionary<Guid,UID2EntityID> Uid2EntityIds = new Dictionary<Guid, UID2EntityID>();
 
         public static bool TryGetEntityInfo(Guid guid,out UID2EntityID entityInfo)
