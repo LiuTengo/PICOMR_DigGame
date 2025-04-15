@@ -414,15 +414,6 @@
       },
       "url": "https://packages.unity.cn"
     },
-    "com.unity.xr.mock-hmd": {
-      "version": "1.4.0-preview.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.xr.management": "4.0.1"
-      },
-      "url": "https://packages.unity.cn"
-    },
     "com.unity.xr.openxr": {
       "version": "1.6.0",
       "depth": 0,
