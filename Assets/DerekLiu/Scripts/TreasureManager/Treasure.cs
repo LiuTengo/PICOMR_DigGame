@@ -4,7 +4,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace DerekLiu.Scripts
 {
-    public class Treasure : MonoBehaviour,ITreasure
+    public class Treasure : TreasureBase
     {
         public List<TreasureSocket> sockets;
         public bool IsGrabbing = false;

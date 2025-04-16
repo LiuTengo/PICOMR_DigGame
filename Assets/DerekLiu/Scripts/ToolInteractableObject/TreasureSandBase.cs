@@ -9,9 +9,9 @@ namespace DerekLiu.Scripts
     public class TreasureSandBase : MonoBehaviour,IEntity, 
         IToolInteractableObject,ISand
     {
-        private Material material;
-        private int maxInteractCount = 3;
-        private int currentInteractCount = 0;
+        protected Material material;
+        protected int maxInteractCount = 3;
+        protected int currentInteractCount = 0;
         
         private void Start()
         {
@@ -23,9 +23,8 @@ namespace DerekLiu.Scripts
             maxInteractCount = value;
         }
             
-        public void OnToolInteract(DerekDigGameTool tool)
+        public virtual void OnToolInteract(DerekDigGameTool tool)
         {
-            Debug.Log("OnToolInteract");
             if(tool.toolType == DerekDigGameToolType.Hammer)
             {
                 switch (currentInteractCount)
@@ -44,7 +43,7 @@ namespace DerekLiu.Scripts
                 currentInteractCount = Mathf.Min(currentInteractCount + 1, maxInteractCount);
                 if (currentInteractCount >= maxInteractCount)
                 {
-                    TreasureManager.instance.SpawnTreasure();
+                    TreasureManager.instance.SpawnTreasure(transform.position, transform.rotation);
                 }
             }
         }

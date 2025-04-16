@@ -1,7 +1,9 @@
-﻿namespace DerekLiu.Scripts
+﻿using UnityEngine;
+
+namespace DerekLiu.Scripts
 {
-    public interface ITreasure
+    public abstract class TreasureBase : MonoBehaviour
     {
-        
+        public int id;
     }
 }
