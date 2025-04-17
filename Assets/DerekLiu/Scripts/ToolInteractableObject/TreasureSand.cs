@@ -16,6 +16,7 @@ namespace DerekLiu.Scripts
                 if (currentInteractCount >= maxInteractCount)
                 {
                     TreasureManager.instance.SpawnTreasure(transform.position, transform.rotation);
+                    sandManager.DestroyTreasureSandInPlane(this);
                 }
             }
         }

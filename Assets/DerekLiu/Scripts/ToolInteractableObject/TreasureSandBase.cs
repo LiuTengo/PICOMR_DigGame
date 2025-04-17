@@ -9,6 +9,7 @@ namespace DerekLiu.Scripts
     public class TreasureSandBase : MonoBehaviour,IEntity, 
         IToolInteractableObject,ISand
     {
+        protected SandManager sandManager;
         protected Material material;
         protected int maxInteractCount = 3;
         protected int currentInteractCount = 0;
@@ -18,6 +19,11 @@ namespace DerekLiu.Scripts
             material = GetComponent<Renderer>().material;
         }
 
+        public void SetSandManager(SandManager sandManager)
+        {
+            this.sandManager = sandManager;
+        }
+        
         public void SetMaxInteractCount(int value)
         {
             maxInteractCount = value;
@@ -44,6 +50,7 @@ namespace DerekLiu.Scripts
                 if (currentInteractCount >= maxInteractCount)
                 {
                     TreasureManager.instance.SpawnTreasure(transform.position, transform.rotation);
+                    sandManager.DestroyTreasureSandInPlane(this);
                 }
             }
         }
