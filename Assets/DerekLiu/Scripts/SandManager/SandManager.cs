@@ -18,6 +18,9 @@ namespace DerekLiu.Scripts
     public class SandManager : SingletonMono<SandManager>
     {
         [SerializeField]private SandIDRange sandIDRanges;
+        public GameObject SandPrefab;
+        public Transform minPos;
+        public Transform maxPos;
         
         private HashSet<TreasureSandBase> sands = new HashSet<TreasureSandBase>();
         private AstarPath _aStarPath;
@@ -51,7 +54,19 @@ namespace DerekLiu.Scripts
                 return _walkableNodes;
             }
         }
+
+
+        public int currentCount = 0;
+        public int maxCount = 3;
         
+        public void Update()
+        {
+            if (currentCount < maxCount)
+            {
+                SpawnTreasureSandInPlane();
+            }
+        }
+
         public void SpawnTreasureSand()
         {
             uint id = GetRandomSandID();
@@ -66,6 +81,31 @@ namespace DerekLiu.Scripts
                 sands.Add(s);
             }
         }
+
+        public void SpawnTreasureSandInPlane()
+        {
+            Vector3 position = GetRandomPositionNoVR();
+            position.y += 0.1f;
+            var go = Instantiate(SandPrefab,position, Quaternion.identity);
+            var sand = go.GetComponent<TreasureSandBase>();
+            if (sand != null)
+            {
+                sand.SetSandManager(this);
+                currentCount++;
+                sands.Add(sand);
+            }
+        }
+
+        public void DestroyTreasureSandInPlane(TreasureSandBase treasureSand)
+        {
+            if (treasureSand != null)
+            {
+                sands.Remove(treasureSand);
+                Destroy(treasureSand.gameObject);
+                currentCount--;
+            }
+        }
+        
 
         public async Task DestroyTreasureSand(TreasureSandBase sand)
         {
@@ -86,6 +126,15 @@ namespace DerekLiu.Scripts
         {
             int rand = Random.Range(0,walkableNodes.Count);
             return (Vector3)walkableNodes[rand].position;
+        }
+        
+        private Vector3 GetRandomPositionNoVR()
+        {
+            Vector3 rand = (maxPos.position - minPos.position);
+            rand.x = Random.Range(minPos.position.x, maxPos.position.x);
+            rand.z = Random.Range(minPos.position.y, maxPos.position.z);
+            
+            return minPos.position + rand;
         }
     }
 }

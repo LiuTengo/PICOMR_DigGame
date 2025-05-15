@@ -6,10 +6,16 @@ namespace DerekLiu.Scripts
     {
         Hammer,
         Shovel,
+        Brush,
     }
     
     public class DerekDigGameTool : MonoBehaviour
     {
         public DerekDigGameToolType toolType;
+
+        public virtual bool CanInteract()
+        {
+            return true;
+        }
     }
 }

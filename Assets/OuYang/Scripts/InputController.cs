@@ -1,27 +1,28 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
-[RequireComponent(typeof(XRDeviceSimulator))] // Éè±¸Ä£ÄâÆ÷Ö§³Ö
 public class InputController : MonoBehaviour
 {
-    [Header("ÊäÈëÅäÖÃ")]
-    [SerializeField] private InputActionAsset xriInputActions; // ÍÏÈëXRI Default Input Actions
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField] private InputActionAsset xriInputActions; // ï¿½ï¿½ï¿½ï¿½XRI Default Input Actions
 
-    private InputAction leftTriggerAction;
-    private InputAction rightTriggerAction;
+    [SerializeField] private InputActionReference xrLeftTriggerAction;
+    [SerializeField] private InputActionReference xrRightTriggerAction;
+    
+    // private InputAction leftTriggerAction;
+    // private InputAction rightTriggerAction;
+    
+    
 
     private ToolManager toolManager;
 
     private void Awake()
     {
-        // »ñÈ¡×óÓÒÊÖ°â»ú¶¯×÷
-        InputActionMap leftHandMap = xriInputActions.FindActionMap("XRI LeftHand Interaction");
-        InputActionMap rightHandMap = xriInputActions.FindActionMap("XRI RightHand Interaction");
-
-        leftTriggerAction = leftHandMap.FindAction("Activate");
-        rightTriggerAction = rightHandMap.FindAction("Activate");
+        // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        //InputActionMap leftHandMap = xriInputActions.FindActionMap("XRI LeftHand Interaction");
+        //InputActionMap rightHandMap = xriInputActions.FindActionMap("XRI RightHand Interaction");
+        //leftTriggerAction = leftHandMap.FindAction("Activate");
+        //rightTriggerAction = rightHandMap.FindAction("Activate");
     }
 
     private void Start()
@@ -31,28 +32,36 @@ public class InputController : MonoBehaviour
 
     private void OnEnable()
     {
-        // °ó¶¨´¥·¢ÊÂ¼þ
-        leftTriggerAction.performed += OnLeftTriggerPressed;
-        rightTriggerAction.performed += OnRightTriggerPressed;
+        // ï¿½ó¶¨´ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
+        //leftTriggerAction.performed += OnLeftTriggerPressed;
+        //rightTriggerAction.performed += OnRightTriggerPressed;
 
-        leftTriggerAction.Enable();
-        rightTriggerAction.Enable();
+        xrLeftTriggerAction.action.Enable();
+        xrRightTriggerAction.action.Enable();
+        
+        xrLeftTriggerAction.action.performed += OnLeftTriggerPressed;
+        xrRightTriggerAction.action.performed += OnRightTriggerPressed;
+        
+        //leftTriggerAction.Enable();
+        //rightTriggerAction.Enable();
     }
 
     private void OnDisable()
     {
-        leftTriggerAction.performed -= OnLeftTriggerPressed;
-        rightTriggerAction.performed -= OnRightTriggerPressed;
+        xrLeftTriggerAction.action.Disable();
+        xrRightTriggerAction.action.Disable();
+        //leftTriggerAction.performed -= OnLeftTriggerPressed;
+        //rightTriggerAction.performed -= OnRightTriggerPressed;
 
-        leftTriggerAction.Disable();
-        rightTriggerAction.Disable();
+        //leftTriggerAction.Disable();
+        //rightTriggerAction.Disable();
     }
 
     private void OnLeftTriggerPressed(InputAction.CallbackContext context)
     {
-        if (context.ReadValue<float>() > 0.5f) // °´Ñ¹ãÐÖµ
+        if (context.ReadValue<float>() > 0.5f) // ï¿½ï¿½Ñ¹ï¿½ï¿½Öµ
         {
-            Debug.Log("×óÊÖ°â»ú°´ÏÂ");
+            //Debug.Log("ï¿½ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
             toolManager.SwitchObject();
         }
     }
@@ -61,7 +70,7 @@ public class InputController : MonoBehaviour
     {
         if (context.ReadValue<float>() > 0.5f)
         {
-            Debug.Log("ÓÒÊÖ°â»ú°´ÏÂ");
+            //Debug.Log("ï¿½ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
             toolManager.SwitchObject();
         }
     }

@@ -12,4 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14858a677cd94b298eb1c37bc4021e8b, type: 3}
   m_Name: TreasureAssetSO
   m_EditorClassIdentifier: 
-  prefabs: []
+  prefabs:
+  - id: 1
+    prefab: {fileID: 6006783695342169282, guid: d7fb93cf322738449b72efdf15d3b2e0, type: 3}
+  - id: 2
+    prefab: {fileID: 4345166761762303708, guid: 831705e6ab22b3e4c8988f08a82b12fa, type: 3}
+  - id: 3
+    prefab: {fileID: 6678718179458760913, guid: 763573e6c181aa94bb384da204c7c84a, type: 3}
+  - id: 4
+    prefab: {fileID: 2601350364893067287, guid: 0d238865bc612a547bfc73d94b73c838, type: 3}
+  - id: 5
+    prefab: {fileID: 1293717581601297684, guid: 7368abf50749f7a4c92f8289e34b70ab, type: 3}
+  - id: 6
+    prefab: {fileID: 5223296481511185057, guid: 50aca6b226466a448b1c67e736d85025, type: 3}
+  - id: 7
+    prefab: {fileID: 5869107245061768218, guid: 9f7fb95f4ee871c4fab3fa3459eecaf3, type: 3}
+  - id: 8
+    prefab: {fileID: 7120195067523321850, guid: d43b44bd975546545b921c52cdff5c5f, type: 3}
