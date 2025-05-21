@@ -118,21 +118,21 @@ Shader "ithappy/WaterURP"
             }
 
             // Packing
-            half3 UnpackNormalAG(half4 packedNormal, half scale)
-            {
-                half3 normal;
-                normal.xy = packedNormal.ag * 2.0 - 1.0;
-                normal.z = max(1.0e-16, sqrt(1.0 - saturate(dot(normal.xy, normal.xy))));
+            //half3 UnpackNormalAG(half4 packedNormal, half scale)
+            //{
+            //    half3 normal;
+            //    normal.xy = packedNormal.ag * 2.0 - 1.0;
+            //    normal.z = max(1.0e-16, sqrt(1.0 - saturate(dot(normal.xy, normal.xy))));
 
-                normal.xy *= scale;
-                return normal;
-            }
+            //    normal.xy *= scale;
+            //    return normal;
+            //}
 
-            half3 UnpackNormalmapRGorAG(half4 packedNormal, half scale)
-            {
-                packedNormal.a *= packedNormal.r;
-                return UnpackNormalAG(packedNormal, scale);
-            }
+            //half3 UnpackNormalmapRGorAG(half4 packedNormal, half scale)
+            //{
+            //    packedNormal.a *= packedNormal.r;
+            //    return UnpackNormalAG(packedNormal, scale);
+            //}
 
             // Operations
             half3 NormalBlend(half3 A, half3 B)
