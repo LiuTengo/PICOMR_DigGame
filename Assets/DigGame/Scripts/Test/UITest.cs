@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using Test.Scripts.ResourcesLoader;
+using Unity.XR.PXR;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -56,8 +58,17 @@ public class UITest : MonoBehaviour
     }
     private  void CreatePrefab3(SelectExitEventArgs arg0)
     {
-        var go = Game.instance.ResourcesLoader.LoadAsset(3,new Vector3(1,1,1),Quaternion.identity) as GameObject; 
-         _ = Game.instance.EntityManager.CreateAndAddEntity(go);
+        var floorList = Game.instance.EntityManager.GetRoomAnchorByLabel(PxrSemanticLabel.Floor);
+        if (floorList.Count > 0)
+        {
+            Vector3 pos = floorList[0].Position;
+            pos.x += 0.5f;
+            pos.y += 0.2f;
+            var go = Game.instance.ResourcesLoader.LoadAsset
+                (3,pos,Quaternion.identity);
+            _ = Game.instance.EntityManager.CreateAndAddEntity(go);
+        }
+         //_ = Game.instance.EntityManager.CreateAndAddEntity(go);
     }
 
     private async void DeleteEntity(SelectExitEventArgs arg0)

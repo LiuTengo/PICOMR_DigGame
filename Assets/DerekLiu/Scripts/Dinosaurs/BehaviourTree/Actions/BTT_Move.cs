@@ -43,7 +43,8 @@ public class BTT_Move : Action
 
 	public override TaskStatus OnUpdate()
 	{
-		if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+		if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance 
+		    || !navMeshAgent.hasPath)
 		{
 			return TaskStatus.Success;
 		}

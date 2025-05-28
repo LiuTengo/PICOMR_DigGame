@@ -29,6 +29,15 @@ namespace PICOMR.Scripts.ResourcesLoader
             }
         }
 
+        public PxrSemanticLabel Label
+        {
+            get
+            {
+                PXR_MixedReality.GetSceneSemanticLabel(Handle, out var label);
+                return label;
+            }
+        }
+        
         public AnchorData(ulong handle, Guid uid)
         {
             Handle = handle;

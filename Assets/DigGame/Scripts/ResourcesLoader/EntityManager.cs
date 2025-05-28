@@ -24,14 +24,17 @@ namespace PICOMR.Scripts.ResourcesLoader
         private bool isLeadingGameEntity = false;
         private List<IEntity> gameEntities = new();
         private bool _needUpdateRoomEntities = false;
-        private readonly IList<IEntity> roomEntities = new List<IEntity>();
+        private readonly IList<AnchorData> roomEntities = new List<AnchorData>();
         private ResourcesLoader resourcesLoader;
+        
+        private Dictionary<PxrSemanticLabel,List<AnchorData>> roomAnchorData = new();
         
         public ResourcesLoader ResourcesLoader
         {
             set => resourcesLoader = value;
         }
         
+        #region Game Anchor
         /// <summary>
         /// 初次/再次进入游戏时加载游戏实体
         /// </summary>
@@ -142,7 +145,7 @@ namespace PICOMR.Scripts.ResourcesLoader
             {
                 gameEntities.Remove(entity);
                 Object.Destroy(entity.GameObject);
-                await SpatialAnchorManager.DeleteAnchorById(anchorUuid);
+                await SpatialAnchorManager.DeleteGameAnchorById(anchorUuid);
                 Debug.Log($"Entity and anchor with UUID {anchorUuid} deleted.");
             }
             else
@@ -156,7 +159,7 @@ namespace PICOMR.Scripts.ResourcesLoader
             if (gameEntities.Contains(entity))
             {
                 gameEntities.Remove(entity);
-                await SpatialAnchorManager.DeleteAnchorById(entity.AnchorData.Uid);
+                await SpatialAnchorManager.DeleteGameAnchorById(entity.AnchorData.Uid);
                 Object.Destroy(entity.GameObject);
                 Debug.Log($"Entity and anchor with UUID {entity.AnchorData.Uid} deleted.");
             }
@@ -165,7 +168,59 @@ namespace PICOMR.Scripts.ResourcesLoader
                 Debug.LogError($"Entity not found in gameEntities list.");
             }
         }
+        #endregion 
+        
+        #region Room Anchor
 
+        public async UniTask LoadRoomEntities()
+        {
+            await ClearRoomEntities();
+            //PXR_Manager.SceneAnchorDataUpdated += DoSceneAnchorDataUpdated;
+            var anchors = await SpatialAnchorManager.LoadRoomAnchors();
+            Debug.Log( $"Load Room Anchors Finished, total anchors: {anchors.Count}");
+
+            foreach (var anchor in anchors)
+            {
+                if (anchor != null)
+                {
+                    roomEntities.Add(anchor);
+                    if (roomAnchorData.ContainsKey(anchor.Label))
+                    {
+                        var list = roomAnchorData[anchor.Label];
+                        list.Add(anchor);
+                        roomAnchorData[anchor.Label] = list;
+                    }
+                    else
+                    {
+                        List<AnchorData> dataList = new();
+                        dataList.Add(anchor);
+                        roomAnchorData.Add(anchor.Label, dataList);
+                    }
+                    
+                    if (anchor.Label == PxrSemanticLabel.Floor)
+                    {
+                        Debug.LogWarning( $"Found Floor Anchor: {anchor.Label}");
+                    }
+                }
+            }
+        }
+
+        public List<AnchorData> GetRoomAnchorByLabel(PxrSemanticLabel label)
+        {
+            return roomAnchorData[label];
+        }
+        
+        public async UniTask ClearRoomEntities()
+        {
+            foreach (var roomAnchor in roomAnchorData)
+            {
+                roomAnchor.Value.Clear();
+            }
+            roomAnchorData.Clear();
+            roomEntities.Clear();
+        }
+        
+        #endregion
     }
     
 }

@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using DerekLiu.Scripts;
 using UnityEngine;
 
 public class Dinosour : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public AnimalType animalType;
 }

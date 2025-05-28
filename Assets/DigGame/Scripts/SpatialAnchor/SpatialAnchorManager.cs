@@ -10,12 +10,19 @@ using UnityEngine;
 
 public static  class SpatialAnchorManager
 {
-    private static List<AnchorData> anchorDataList = new List<AnchorData>();
+    //Load Room Anchor Data
     private static bool isLoadingRoomData = false;
+    private static List<AnchorData> roomData = new List<AnchorData>();
+    
+    //Load Game Anchor Data
+    private static bool isLoadingGameData = false;
+    private static List<AnchorData> gameAnchorDataList = new List<AnchorData>();
+
+    #region Game Anchor
     public static async UniTask<List<AnchorData>> LoadSpatialAnchor()
     {
-        isLoadingRoomData = true;
-        anchorDataList.Clear();
+        isLoadingGameData = true;
+        gameAnchorDataList.Clear();
         var result = await PXR_MixedReality.QuerySpatialAnchorAsync();
         if (result.result == PxrResult.SUCCESS)
         {
@@ -25,12 +32,12 @@ public static  class SpatialAnchorManager
                 {
                     PXR_MixedReality.GetAnchorUuid(anchor, out Guid anchorUuid);
                     AnchorData anchorData = new AnchorData(anchor,anchorUuid);
-                    anchorDataList.Add(anchorData);
+                    gameAnchorDataList.Add(anchorData);
                 }
             }
         }
-        isLoadingRoomData = false;
-        return anchorDataList;
+        isLoadingGameData = false;
+        return gameAnchorDataList;
     }
     
     public static async UniTask<AnchorData> CreateSpatialAnchor(Transform transform)
@@ -39,7 +46,7 @@ public static  class SpatialAnchorManager
         if (result.result == PxrResult.SUCCESS)
         {
             var anchorData = new AnchorData(result.anchorHandle,result.uuid);
-            anchorDataList.Add(anchorData);
+            gameAnchorDataList.Add(anchorData);
             return anchorData;
         }
         return null;
@@ -71,7 +78,7 @@ public static  class SpatialAnchorManager
         }
     }
 
-    public static async UniTask DeleteAnchor(AnchorData anchorData)
+    public static async UniTask DeleteGameAnchor(AnchorData anchorData)
     {
         var result = PXR_MixedReality.DestroyAnchor(anchorData.Handle);
         if (result == PxrResult.SUCCESS)
@@ -86,7 +93,7 @@ public static  class SpatialAnchorManager
         Debug.Log($"Delete Anchor, uuid: {anchorData.Uid}, handle: {anchorData.Handle}");
     }
 
-    public static async UniTask DeleteAllAnchors()
+    public static async UniTask DeleteAllGameAnchors()
     {
         var result = await PXR_MixedReality.QuerySpatialAnchorAsync();
         Debug.unityLogger.Log($"LoadSpatialAnchorAsync: {result.result}");
@@ -102,13 +109,13 @@ public static  class SpatialAnchorManager
         }
     }
 
-    public static async UniTask DeleteAnchorById(Guid anchorUuid)
+    public static async UniTask DeleteGameAnchorById(Guid anchorUuid)
     {
-        var anchorData = anchorDataList.FirstOrDefault(a => a.Uid == anchorUuid);
+        var anchorData = gameAnchorDataList.FirstOrDefault(a => a.Uid == anchorUuid);
         if (anchorData != null)
         {
-            await DeleteAnchor(anchorData);
-            anchorDataList.Remove(anchorData);
+            await DeleteGameAnchor(anchorData);
+            gameAnchorDataList.Remove(anchorData);
             Debug.Log($"Anchor with UUID {anchorUuid} deleted.");
         }
         else
@@ -116,4 +123,34 @@ public static  class SpatialAnchorManager
             Debug.LogError($"Anchor with UUID {anchorUuid} not found.");
         }
     }
+
+    #endregion
+
+    #region Room Anchor
+    /// <summary>
+    /// 加载房间锚点
+    /// </summary>
+    /// <returns></returns>
+    public async static UniTask<List<AnchorData>> LoadRoomAnchors()
+    {
+        roomData.Clear();
+        isLoadingRoomData = true;
+        var result = await PXR_MixedReality.QuerySceneAnchorAsync(default);
+        Debug.Log($"LoadRoomAnchors: {result.result}");
+        if (result.result == PxrResult.SUCCESS)
+        {
+            if (result.anchorDictionary.Count > 0)
+            {
+                foreach (var anchor in result.anchorDictionary)
+                {
+                    AnchorData anchorData = new AnchorData(anchor.Key,anchor.Value);
+                    roomData.Add(anchorData);
+                }
+            }  
+        }
+        isLoadingGameData = false;
+        return roomData;
+    }
+    
+    #endregion
 }

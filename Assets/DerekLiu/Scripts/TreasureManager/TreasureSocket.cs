@@ -7,7 +7,7 @@ namespace DerekLiu.Scripts
     public class TreasureSocket : MonoBehaviour
     {
         public bool IsOccupied;
-        public bool CanAttachObject => !SocketParent.IsGrabbing;
+        //public bool CanAttachObject => !SocketParent.IsGrabbing;
         public Treasure SocketParent;
         
         private void Start()
@@ -23,11 +23,11 @@ namespace DerekLiu.Scripts
             t.transform.SetParent(this.transform);
             t.transform.localPosition = Vector3.zero;
             t.transform.localRotation = Quaternion.identity;
-            t.DisableGrab();
-            t.AddGrabCollider(SocketParent);
+            //t.DisableGrab();
+            //t.AddGrabCollider(SocketParent);
             
-            SocketParent?.ClearAttachedInfo();
-            SocketParent?.UpdateSockets(t);
+            //SocketParent?.ClearAttachedInfo();
+            //SocketParent?.UpdateSockets(t);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -37,13 +37,13 @@ namespace DerekLiu.Scripts
             var t = other.transform.GetComponent<TreasureSocket>();
             if (t != null)
             {
-                SocketParent?.SetAttachToSocket(t);
+                //SocketParent?.SetAttachToSocket(t);
             }
         }
         
         private void OnTriggerExit(Collider other)
         {
-            SocketParent?.SetAttachToSocket(null);
+            //SocketParent?.SetAttachToSocket(null);
         }
     }
 }

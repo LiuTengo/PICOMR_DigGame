@@ -6,75 +6,32 @@ namespace DerekLiu.Scripts
 {
     public class Treasure : TreasureBase
     {
-        public List<TreasureSocket> sockets;
-        public bool IsGrabbing = false;
+        public bool CanHover = true;
         
-        public TreasureSocket attachedSocket;
-        private XRGrabInteractable attachedInteractable;
-        private Collider collider;
+        private XRGrabInteractable grabInteractable;
 
         public void Start()
         {
-            collider = GetComponent<Collider>();
-            attachedInteractable = GetComponent<XRGrabInteractable>();
-            
-            attachedInteractable.selectEntered.AddListener(OnSelectEntered);
-            attachedInteractable.selectExited.AddListener(OnRelease);
+            grabInteractable = GetComponent<XRGrabInteractable>();
         }
 
-        public void SetAttachToSocket(TreasureSocket socket)
+        public void OnAttachToSocket(Transform socketTransform)
         {
-            attachedSocket = socket;
-        }
-
-        public void DisableGrab()
-        {
-            attachedInteractable.trackPosition = false;
-            attachedInteractable.trackRotation = false;
-        }
+            grabInteractable.attachEaseInTime = 0.01f;
+            grabInteractable.trackScale = false;
         
-        public void AddGrabCollider(Treasure parentGrab)
-        {
-            parentGrab.attachedInteractable.colliders.Add(collider);
+            transform.SetParent(socketTransform);
+            transform.position = socketTransform.position;
+            transform.rotation = socketTransform.rotation;
+            transform.localScale = socketTransform.localScale;
         }
 
-        private void OnRelease(SelectExitEventArgs evt)
+        public void OnDetachFromSocket(Transform socketTransform)
         {
-            if (attachedSocket != null && attachedSocket.CanAttachObject)
-            {
-                attachedSocket.OccupySocketBy(this);
-            }
+            CanHover = true;
             
-            attachedSocket = null;
-            IsGrabbing = false;
-        }
-        
-        private void OnSelectEntered(SelectEnterEventArgs arg0)
-        {
-            attachedSocket = null;
-            IsGrabbing = true;
-        }
-
-        public void ClearAttachedInfo()
-        {
-            attachedSocket = null;
-        }
-
-        public void UpdateSockets(Treasure t)
-        {
-            foreach (var s in t.sockets)
-            {
-                if (!s.IsOccupied)
-                {
-                    sockets.Add(s);
-                    s.SocketParent = this;
-                }
-                else
-                {
-                    s.SocketParent = null;
-                }
-            }
-            t.sockets.Clear();
+            grabInteractable.attachEaseInTime = 1.0f;
+            grabInteractable.trackScale = true;
         }
     }
 }

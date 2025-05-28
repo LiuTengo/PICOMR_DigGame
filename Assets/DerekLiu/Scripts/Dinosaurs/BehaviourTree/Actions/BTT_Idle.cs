@@ -30,6 +30,7 @@ public class BTT_Idle : Action
 		if (!bRunning)
 		{
 			navMeshAgent.isStopped = true;
+			navMeshAgent.destination = transform.position;
 			stateInterval = Mathf.Abs(WaitTime + Random.Range(-RandomTime, RandomTime));
 			startTime = Time.time;
 			bRunning = true;

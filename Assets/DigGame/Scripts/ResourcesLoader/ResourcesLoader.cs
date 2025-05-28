@@ -10,7 +10,7 @@ namespace PICOMR.Scripts.ResourcesLoader
     /// </summary>
     public class ResourcesLoader : MonoBehaviour
     {
-        [SerializeField]private AssetSO assets;
+        [SerializeField]public AssetSO assets;
 
         public void Awake()
         {
@@ -41,11 +41,32 @@ namespace PICOMR.Scripts.ResourcesLoader
             }
             else
             {
-                Debug.LogError($"Failed to load asset {id}");
+                Debug.LogWarning($"Failed to load asset {id}");
             }
             return null;
         }
 
+        public GameObject LoadAsset(ulong id,GameObject prefab,Vector3 position,Quaternion rotation)
+        {
+            GameObject res;
+            if (prefab != null)
+            {
+                res = Instantiate(prefab, position, rotation);
+                var item = res.GetComponent<IItem>();
+                if (item != null)
+                {
+                    item.EntityID = id;
+                    //TODO: Do something else
+                }
+                return res;   
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to load asset {id}");
+            }
+            return null;
+        }
+        
         /// <summary>
         /// 根据anchor handle获取预制体
         /// </summary>
