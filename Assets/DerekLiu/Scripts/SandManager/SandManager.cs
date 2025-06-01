@@ -2,60 +2,21 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Pathfinding;
+using PICOMR.Scripts.ResourcesLoader;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace DerekLiu.Scripts
 {
-    [Serializable]
-    struct SandIDRange
-    {
-        public int minID;
-        public int maxID;
-    }
-    
+
     public class SandManager : SingletonMono<SandManager>
     {
-        [SerializeField]private SandIDRange sandIDRanges;
-        public GameObject SandPrefab;
-        public Transform minPos;
-        public Transform maxPos;
-        
+        public float minRadius=1.2f;
+        public float maxRadius=2.5f;
+
         private HashSet<TreasureSandBase> sands = new HashSet<TreasureSandBase>();
-        private AstarPath _aStarPath;
-        private List<GraphNode> _walkableNodes = new List<GraphNode>();
         
-        private AstarPath aStarPath
-        {
-            get
-            {
-                if (_aStarPath == null)
-                {
-                    _aStarPath = FindObjectOfType<AstarPath>();
-                }
-                return _aStarPath;
-            }
-        }
-        private List<GraphNode> walkableNodes
-        {
-            get
-            {
-                if (_walkableNodes.Count == 0)
-                {
-                    aStarPath.data.GetNodes((node) =>
-                    {
-                        if (node.Walkable)
-                        {
-                            walkableNodes.Add(node);
-                        }
-                    });
-                }
-                return _walkableNodes;
-            }
-        }
-
-
         public int currentCount = 0;
         public int maxCount = 3;
         
@@ -67,26 +28,14 @@ namespace DerekLiu.Scripts
             }
         }
 
-        public void SpawnTreasureSand()
+        private void SpawnTreasureSandInPlane()
         {
-            uint id = GetRandomSandID();
-            Vector3 position = GetRandomPosition();
+            ulong id = GetRandomSandID();
+            Vector3 position = GetRandomPositionAroundMainLand();
+            position.y += 0.4f;
             
-            var go = Game.instance.ResourcesLoader.LoadAsset(id,position+new Vector3(0,0.5f,0),Quaternion.identity) as GameObject; 
-            _ = Game.instance.EntityManager.CreateAndAddEntity(go);
-
-            var s = go.GetComponent<TreasureSandBase>();
-            if (s != null)
-            {
-                sands.Add(s);
-            }
-        }
-
-        public void SpawnTreasureSandInPlane()
-        {
-            Vector3 position = GetRandomPositionNoVR();
-            position.y += 0.1f;
-            var go = Instantiate(SandPrefab,position, Quaternion.identity);
+            var go = Game.instance.ResourcesLoader.LoadAsset(id,position,Quaternion.identity,null,ObjectType.Sand);
+            
             var sand = go.GetComponent<TreasureSandBase>();
             if (sand != null)
             {
@@ -107,34 +56,19 @@ namespace DerekLiu.Scripts
         }
         
 
-        public async Task DestroyTreasureSand(TreasureSandBase sand)
+        private ulong GetRandomSandID()
         {
-            if (sands.Contains(sand))
-            {
-                //TODO：删除
-                await Game.instance.EntityManager.DeleteEntityAndAnchor(sand);
-                sands.Remove(sand);
-            }
-        }
-
-        private uint GetRandomSandID()
-        {
-            return (uint)Random.Range(sandIDRanges.minID,sandIDRanges.maxID);
-        }
-
-        private Vector3 GetRandomPosition()
-        {
-            int rand = Random.Range(0,walkableNodes.Count);
-            return (Vector3)walkableNodes[rand].position;
+            return Game.instance.ResourcesLoader.GetRandomObjectID(ObjectType.Sand);
         }
         
-        private Vector3 GetRandomPositionNoVR()
+        private Vector3 GetRandomPositionAroundMainLand()
         {
-            Vector3 rand = (maxPos.position - minPos.position);
-            rand.x = Random.Range(minPos.position.x, maxPos.position.x);
-            rand.z = Random.Range(minPos.position.y, maxPos.position.z);
+            float theta = Random.Range(0f, Mathf.PI * 2f);
+            Vector2 randomCircle = new Vector2(Mathf.Cos(theta),Mathf.Sin(theta));
+            float radius = Random.Range(minRadius,maxRadius);
+            randomCircle *= radius;
             
-            return minPos.position + rand;
+            return transform.position + new Vector3(randomCircle.x,0,randomCircle.y);
         }
     }
 }

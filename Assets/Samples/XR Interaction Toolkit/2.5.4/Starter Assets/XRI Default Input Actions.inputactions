@@ -1826,26 +1826,70 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "919c4a6c-22ed-4083-8e14-f30e91ff59fe",
-                    "path": "<XRController>{RightHand}/{Primary2DAxis}",
+                    "name": "One Modifier",
+                    "id": "f94952c3-1889-4f8f-bdca-e408d9a21d12",
+                    "path": "OneModifier",
                     "interactions": "Sector(directions=-1,sweepBehavior=3)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Teleport Select",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "ffc7610a-9fe8-4a69-8e97-0b350531975e",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "Generic XR Controller",
+                    "action": "Teleport Select",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "08d289c9-5024-44f2-8955-8a1a7dfb30a2",
+                    "path": "<XRController>{RightHand}/{Primary2DAxis}",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "Teleport Select",
                     "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "aea5803e-4566-4ff7-8eda-a8d9d3a4e916",
+                    "path": "OneModifier",
+                    "interactions": "Sector(directions=1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Teleport Mode Activate",
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "62690862-4688-4010-975b-b3d9c6062157",
+                    "name": "modifier",
+                    "id": "3a4f41ec-49db-4d6a-ac79-8769b5c573d3",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "Generic XR Controller",
+                    "action": "Teleport Mode Activate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "1be11539-7bfd-4a36-8460-ee2b40b953b8",
                     "path": "<XRController>{RightHand}/{Primary2DAxis}",
-                    "interactions": "Sector(directions=1)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "Teleport Mode Activate",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -1859,37 +1903,103 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "d6c08c3d-3d41-4695-994d-1ac9016a5a9e",
-                    "path": "<XRController>{RightHand}/{Primary2DAxis}",
+                    "name": "One Modifier",
+                    "id": "fc45391e-03d5-4ac4-b8a9-fcf6602f5afe",
+                    "path": "OneModifier",
                     "interactions": "Sector(directions=12,sweepBehavior=1),Sector(directions=2,sweepBehavior=2)",
                     "processors": "",
-                    "groups": "Generic XR Controller",
+                    "groups": "",
                     "action": "Turn",
-                    "isComposite": false,
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "022046aa-be71-4288-859d-6dd42844f6e6",
+                    "name": "modifier",
+                    "id": "9894e472-7702-4eeb-8e58-d54ed38d4257",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "Generic XR Controller",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "e47e7670-a7bc-44e0-bad3-81e0a510090d",
+                    "path": "<XRController>{RightHand}/{Primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Turn",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "b1d9bc44-cc6a-42bf-b260-9124965dcb34",
+                    "path": "OneModifier",
+                    "interactions": "Sector(directions=12,sweepBehavior=1),Sector(directions=2,sweepBehavior=2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "094f5a3e-e490-4118-a03e-5e9ee41ae722",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "Generic XR Controller",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "830a122e-f6d9-49bd-b395-0915d2b203da",
                     "path": "<XRController>{RightHand}/{Primary2DAxis}",
                     "interactions": "",
                     "processors": "StickDeadzone",
                     "groups": "Continuous Move",
                     "action": "Move",
                     "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "971730a1-8a75-4279-9f7f-6b06f5a329e3",
+                    "path": "OneModifier",
+                    "interactions": "Sector(directions=12,sweepBehavior=1),Sector(directions=2,sweepBehavior=2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Teleport Direction",
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "c4b46d7d-8231-4672-83f9-75af565faf57",
+                    "name": "modifier",
+                    "id": "65cb532e-4099-48e4-8088-36b80ba99064",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "Generic XR Controller",
+                    "action": "Teleport Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "076d60f2-71f9-4f80-bcf3-490102403445",
                     "path": "<XRController>{RightHand}/{Primary2DAxis}",
                     "interactions": "",
                     "processors": "",
                     "groups": "Noncontinuous Move",
                     "action": "Teleport Direction",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -2596,6 +2706,76 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pinch Gap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "DigGameInteraction",
+            "id": "aa1e00f6-6c56-4b3c-8a1e-f9382da234e7",
+            "actions": [
+                {
+                    "name": "SwitchObjectInput",
+                    "type": "Button",
+                    "id": "7065ee53-2f8e-4177-9b3b-758d4930b6f2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "YButtonPressed",
+                    "type": "Button",
+                    "id": "01d359fa-28f8-4f87-b04c-216325b518a4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "PICOController",
+                    "id": "cb790cb0-72bd-42a8-a448-dad836b69981",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchObjectInput",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "05023d4f-439f-41e0-a561-2e7cff27236c",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "SwitchObjectInput",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "816b8489-2d3b-47b4-bb43-cc3e99f47cdd",
+                    "path": "<XRController>{RightHand}/{Primary2DAxis}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller;Noncontinuous Move",
+                    "action": "SwitchObjectInput",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "9ba5c30f-6b60-4132-8cb1-7b6253dfbcf8",
+                    "path": "<XRController>{LeftHand}/{SecondaryButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "YButtonPressed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

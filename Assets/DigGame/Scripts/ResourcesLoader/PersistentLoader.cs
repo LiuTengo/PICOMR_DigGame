@@ -34,6 +34,19 @@ namespace Test.Scripts.ResourcesLoader
         {
             return Uid2EntityIds.TryGetValue(guid, out entityInfo);
         }
+
+        public static bool HasJsonFile()
+        {
+            return File.Exists(dataPath);
+        }
+
+        public static void DeleteJsonFile()
+        {
+            if (HasJsonFile())
+            {
+                File.Delete(dataPath);   
+            }
+        }
         
         public static async UniTask LoadData()
         {

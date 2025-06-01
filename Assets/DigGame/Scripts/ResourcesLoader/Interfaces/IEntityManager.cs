@@ -9,10 +9,10 @@ namespace PICOMR.Scripts.ResourcesLoader.Interfaces
         //UniTask<T> LoadAsync<T>(string resourcePath) where T : Object;
         // UniTask LoadRoomEntities();
         // UniTask ClearRoomEntities();
-        UniTask LoadGameEntities();
+        UniTask<bool> LoadGameEntities();
         UniTask SaveGameEntities();
         UniTask ClearGameEntities();
-        UniTask<IEntity> CreateAndAddEntity(GameObject gameObject);
-        UniTask DeleteEntityAndAnchor(IEntity entity);
+        UniTask<IEntity> CreateGameEntity(GameObject go);
+        UniTask DeleteEntityByEntityRef(IEntity entity);
     }
 }

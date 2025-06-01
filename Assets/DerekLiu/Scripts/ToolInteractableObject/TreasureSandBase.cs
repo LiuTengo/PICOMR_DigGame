@@ -1,23 +1,23 @@
-﻿using System;
-using PICOMR.Scripts.ResourcesLoader;
+﻿using PICOMR.Scripts.ResourcesLoader;
 using PICOMR.Scripts.ResourcesLoader.Interfaces;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace DerekLiu.Scripts
 {
-    public class TreasureSandBase : MonoBehaviour,IEntity, 
+    public class TreasureSandBase : MonoBehaviour, 
         IToolInteractableObject,ISand
     {
+        protected Vector3 knockAngle;
         protected SandManager sandManager;
-        protected Material material;
-        protected int maxInteractCount = 3;
-        protected int currentInteractCount = 0;
-        
-        private void Start()
-        {
-            material = GetComponent<Renderer>().material;
-        }
+        [SerializeField] protected ParticleSystem particleSystem;
+        [SerializeField] protected AudioSource audioSource;
+        [SerializeField] protected AudioClip audioClip;
+        [SerializeField] protected int maxInteractCount = 3;
+        [SerializeField] protected int currentInteractCount = 0;
+        [SerializeField] protected ulong spawnIndex;
+
+        protected bool triggered;
+        public bool HasTriggered => triggered;
 
         public void SetSandManager(SandManager sandManager)
         {
@@ -28,35 +28,26 @@ namespace DerekLiu.Scripts
         {
             maxInteractCount = value;
         }
-            
-        public virtual void OnToolInteract(DerekDigGameTool tool)
-        {
-            if(tool.toolType == DerekDigGameToolType.Hammer)
-            {
-                switch (currentInteractCount)
-                {
-                    case 1:
-                        material.color = Color.red;
-                        break;
-                    case 2:
-                        material.color = new Color(1.0f,0.5f,0.0f);
-                        break;
-                    case 3:
-                        material.color = Color.yellow;
-                        break;
-                }
 
-                currentInteractCount = Mathf.Min(currentInteractCount + 1, maxInteractCount);
-                if (currentInteractCount >= maxInteractCount)
-                {
-                    TreasureManager.instance.SpawnTreasure(transform.position, transform.rotation);
-                    sandManager.DestroyTreasureSandInPlane(this);
-                }
-            }
+        public void SetSpawnGameObject(ulong goIndex)
+        {
+            spawnIndex = goIndex;
         }
 
-        public AnchorData AnchorData { get; }
-        public GameObject GameObject { get; }
-        public bool IsRoomEntity { get; }
+        public void SetHitAngle(Vector3 HitAngle)
+        {
+            knockAngle = HitAngle;
+        }
+
+        public virtual void OnToolInteract(DerekDigGameTool tool)
+        {
+            if (HasTriggered)
+            {
+                return;
+            }
+            triggered = true;
+        }
+        
+        public virtual void OnHit() { }
     }
 }

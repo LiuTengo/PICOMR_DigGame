@@ -24,11 +24,7 @@ namespace PICOMR.Scripts.ResourcesLoader
         private bool isLeadingGameEntity = false;
         private List<IEntity> gameEntities = new();
         private bool _needUpdateRoomEntities = false;
-        private readonly IList<AnchorData> roomEntities = new List<AnchorData>();
         private ResourcesLoader resourcesLoader;
-        
-        private Dictionary<PxrSemanticLabel,List<AnchorData>> roomAnchorData = new();
-        
         public ResourcesLoader ResourcesLoader
         {
             set => resourcesLoader = value;
@@ -38,7 +34,7 @@ namespace PICOMR.Scripts.ResourcesLoader
         /// <summary>
         /// 初次/再次进入游戏时加载游戏实体
         /// </summary>
-        public async UniTask LoadGameEntities()
+        public async UniTask<bool> LoadGameEntities()
         {
             var anchors = await SpatialAnchorManager.LoadSpatialAnchor();
             await PersistentLoader.LoadData();
@@ -50,7 +46,8 @@ namespace PICOMR.Scripts.ResourcesLoader
                     continue;
                 }
                 ulong entityID = entityInfo.EntityID;
-                GameObject obj = resourcesLoader.LoadAsset(entityID,anchor.Position,anchor.Rotation);
+                GameObject obj = resourcesLoader.LoadAsset
+                    (entityID,anchor.Position,anchor.Rotation);
                 IEntity entity = new Entity()
                 {
                     AnchorData = anchor,
@@ -58,6 +55,7 @@ namespace PICOMR.Scripts.ResourcesLoader
                 };
                 gameEntities.Add(entity);
             }
+            return true;
         }
 
         /// <summary>
@@ -65,15 +63,15 @@ namespace PICOMR.Scripts.ResourcesLoader
         /// </summary>
         /// <param name="gameObject"></param>
         /// <returns></returns>
-        private async UniTask<IEntity> CreateGameEntity(GameObject gameObject)
+        private async UniTask<IEntity> AddGameEntity(GameObject go)
         {
-            Transform transform = gameObject.transform;
+            Transform transform = go.transform;
             var anchorData = await SpatialAnchorManager.CreateSpatialAnchor(transform);
             if (anchorData != null)
             {
                 Entity newEntity = new Entity
                 {
-                    GameObject = gameObject,
+                    GameObject = go,
                     AnchorData = anchorData
                 };
                 return newEntity;
@@ -85,13 +83,13 @@ namespace PICOMR.Scripts.ResourcesLoader
         }
         
         /// <summary>
-        /// 创建实体并添加至链表
+        /// 创建实体
         /// </summary>
-        /// <param name="gameObject">已实例化的游戏物体</param>
+        /// <param name="go">已实例化的游戏物体</param>
         /// <returns></returns>
-        public async UniTask<IEntity> CreateAndAddEntity(GameObject gameObject)
+        public async UniTask<IEntity> CreateGameEntity(GameObject go)
         {
-            var entity = await CreateGameEntity(gameObject);
+            var entity = await AddGameEntity(go);
             if (entity != null)
             {
                 gameEntities.Add(entity);
@@ -99,6 +97,25 @@ namespace PICOMR.Scripts.ResourcesLoader
             }
             return null;
         }
+
+        public async UniTask PersistEntity(IEntity entity)
+        {
+            if (!gameEntities.Contains(entity))
+            {
+                gameEntities.Add(entity);
+            }
+            await PXR_MixedReality.PersistSpatialAnchorAsync(entity.AnchorData.Handle);
+        }
+        
+        public async UniTask UnPersistEntity(IEntity entity)
+        {
+            if (gameEntities.Contains(entity))
+            {
+                gameEntities.Remove(entity);    
+            }
+            await PXR_MixedReality.UnPersistSpatialAnchorAsync(entity.AnchorData.Handle);
+        }
+
         /// <summary>
         /// 保存实体ID和空间锚点ID
         /// </summary>
@@ -125,6 +142,7 @@ namespace PICOMR.Scripts.ResourcesLoader
             //保存空间锚点
             await SpatialAnchorManager.SaveGameAnchorToLocal(gameEntities.Select(x => x.AnchorData).ToList());
             Debug.Log( $"Finished Save Game Anchors");
+            _ = PersistentLoader.SaveData();
         }
 
         public async UniTask ClearGameEntities()
@@ -154,7 +172,7 @@ namespace PICOMR.Scripts.ResourcesLoader
             }
         }
         //待测试的方法
-        public async UniTask DeleteEntityAndAnchor(IEntity entity)
+        public async UniTask DeleteEntityByEntityRef(IEntity entity)
         {
             if (gameEntities.Contains(entity))
             {
@@ -172,53 +190,12 @@ namespace PICOMR.Scripts.ResourcesLoader
         
         #region Room Anchor
 
-        public async UniTask LoadRoomEntities()
+        public async UniTask LoadRoomAnchors()
         {
-            await ClearRoomEntities();
             //PXR_Manager.SceneAnchorDataUpdated += DoSceneAnchorDataUpdated;
             var anchors = await SpatialAnchorManager.LoadRoomAnchors();
-            Debug.Log( $"Load Room Anchors Finished, total anchors: {anchors.Count}");
-
-            foreach (var anchor in anchors)
-            {
-                if (anchor != null)
-                {
-                    roomEntities.Add(anchor);
-                    if (roomAnchorData.ContainsKey(anchor.Label))
-                    {
-                        var list = roomAnchorData[anchor.Label];
-                        list.Add(anchor);
-                        roomAnchorData[anchor.Label] = list;
-                    }
-                    else
-                    {
-                        List<AnchorData> dataList = new();
-                        dataList.Add(anchor);
-                        roomAnchorData.Add(anchor.Label, dataList);
-                    }
-                    
-                    if (anchor.Label == PxrSemanticLabel.Floor)
-                    {
-                        Debug.LogWarning( $"Found Floor Anchor: {anchor.Label}");
-                    }
-                }
-            }
-        }
-
-        public List<AnchorData> GetRoomAnchorByLabel(PxrSemanticLabel label)
-        {
-            return roomAnchorData[label];
         }
         
-        public async UniTask ClearRoomEntities()
-        {
-            foreach (var roomAnchor in roomAnchorData)
-            {
-                roomAnchor.Value.Clear();
-            }
-            roomAnchorData.Clear();
-            roomEntities.Clear();
-        }
         
         #endregion
     }

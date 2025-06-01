@@ -1,6 +1,4 @@
-﻿using System;
-using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DerekLiu.Scripts
 {
@@ -12,19 +10,6 @@ namespace DerekLiu.Scripts
         {
             m_rigidbody = GetComponent<Rigidbody>();
         }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            var interactableObj = collision.gameObject.GetComponent<IToolInteractableObject>();
-            if (interactableObj != null)
-            {
-                interactableObj.OnToolInteract(this);
-            }
-        }
-
-        public override bool CanInteract()
-        {
-            return base.CanInteract();
-        }
+        
     }
 }

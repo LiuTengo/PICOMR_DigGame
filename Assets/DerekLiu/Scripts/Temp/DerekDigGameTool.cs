@@ -12,10 +12,17 @@ namespace DerekLiu.Scripts
     public class DerekDigGameTool : MonoBehaviour
     {
         public DerekDigGameToolType toolType;
-
-        public virtual bool CanInteract()
+        
+        private void OnCollisionEnter(Collision collision)
         {
-            return true;
+            Debug.Log(collision.gameObject.name);
+            var interactableObj = collision.gameObject.GetComponent<IToolInteractableObject>();
+            if (interactableObj != null)
+            {
+                var contacts = collision.contacts;
+                interactableObj.SetHitAngle(contacts[0].normal);
+                interactableObj.OnToolInteract(this);
+            }
         }
     }
 }

@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using DerekLiu.Scripts;
+using PICOMR.Scripts.ResourcesLoader;
 using UnityEngine;
 
 [Serializable]
@@ -13,24 +11,24 @@ public struct AnimalPair
 
 public class AnimalManager : SingletonMono<AnimalManager>
 {
-    public List<AnimalPair> AnimalPrefabs = new ();
-    private Dictionary<AnimalType, GameObject> AnimalSet = new ();
-
-    public List<Dinosour> SpawnedAnimals = new();
-    
-    public override void Awake()
+    public async void GenerateAnimal(AnimalType animalType,Transform spawnTransform,Transform spawnParent)
     {
-        base.Awake();
-        foreach(AnimalPair pair in AnimalPrefabs)
+        uint animalID = 0;
+        switch (animalType)
         {
-            AnimalSet.Add(pair.animalType, pair.animal);
+            case AnimalType.Dinosaur:
+                animalID = 401;
+                break;
+            case AnimalType.Ostrich:
+                animalID = 402;
+                break;
+            case AnimalType.Stag:
+                animalID = 403;
+                break;
         }
-    }
 
-    public void GenerateAnimal(AnimalType animalType,Transform spawnTransform,Transform spawnParent)
-    {
-        AnimalSet.TryGetValue(animalType, out GameObject dinosaur);
-        GameObject go = Instantiate(dinosaur,spawnTransform.position,Quaternion.identity,spawnParent);
-        
+        var go = Game.instance.ResourcesLoader.LoadAsset(animalID,
+            spawnTransform.position, spawnTransform.rotation,spawnParent,ObjectType.Animal);
+        //await Game.instance.EntityManager.CreateGameEntity(go);
     }
 }

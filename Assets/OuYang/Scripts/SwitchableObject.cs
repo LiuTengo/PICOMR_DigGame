@@ -11,17 +11,27 @@ public class SwitchableObject : MonoBehaviour
     private void Awake()
     {
         grabInteractable = GetComponent<XRGrabInteractable>();
-        grabInteractable.selectEntered.AddListener(OnGrab);
-        grabInteractable.selectExited.AddListener(OnRelease);
+        //grabInteractable.selectEntered.AddListener(OnGrab);
+        //grabInteractable.selectExited.AddListener(OnRelease);
     }
 
-    private void OnGrab(SelectEnterEventArgs args)
+    public void OnUseThisObject()
     {
-        ToolManager.Instance.RegisterGrab((XRBaseInteractor)args.interactorObject);
+        gameObject.SetActive(true);
     }
 
-    private void OnRelease(SelectExitEventArgs args)
+    public void OnReleaseThisObject()
     {
-        ToolManager.Instance.RegisterGrab(null);
+        gameObject.SetActive(false);
     }
+    
+    // private void OnGrab(SelectEnterEventArgs args)
+    // {
+    //     ToolManager.Instance.RegisterGrab((XRBaseInteractor)args.interactorObject);
+    // }
+    //
+    // private void OnRelease(SelectExitEventArgs args)
+    // {
+    //     ToolManager.Instance.RegisterGrab(null);
+    // }
 }

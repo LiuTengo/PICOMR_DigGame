@@ -4,20 +4,35 @@ namespace DerekLiu.Scripts
 {
     public class TreasureSand : TreasureSandBase
     {
-        public Texture[] textures;
+        private void OnEnable()
+        {
+            SetSpawnGameObject(TreasureManager.instance.GetRandomTreasurePrefab());
+        }
         
+        public override void OnHit()
+        {
+            //material.SetTexture("_BaseMap", textures[currentInteractCount]);
+            currentInteractCount ++;
+            
+            particleSystem.Play();
+            audioSource.PlayOneShot(audioClip);
+            
+            if (currentInteractCount >= maxInteractCount)
+            {
+                //Spawn Treasure
+                TreasureManager.instance.SpawnTreasure(spawnIndex,transform.position, transform.rotation);
+                sandManager.DestroyTreasureSandInPlane(this);
+            }
+        }
+
         public override void OnToolInteract(DerekDigGameTool tool)
         {
-            if(tool.toolType == DerekDigGameToolType.Hammer)
+            base.OnToolInteract(tool);
+            
+            if(tool.toolType == DerekDigGameToolType.Shovel ||
+               tool.toolType == DerekDigGameToolType.Brush)
             {
-                material.SetTexture("_BaseMap", textures[currentInteractCount]);
-
-                currentInteractCount = Mathf.Min(currentInteractCount + 1, maxInteractCount);
-                if (currentInteractCount >= maxInteractCount)
-                {
-                    TreasureManager.instance.SpawnTreasure(transform.position, transform.rotation);
-                    sandManager.DestroyTreasureSandInPlane(this);
-                }
+                OnHit();
             }
         }
     }

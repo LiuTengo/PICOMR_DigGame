@@ -13,7 +13,7 @@ public static  class SpatialAnchorManager
     //Load Room Anchor Data
     private static bool isLoadingRoomData = false;
     private static List<AnchorData> roomData = new List<AnchorData>();
-    
+    private static Dictionary<PxrSemanticLabel,List<AnchorData>> roomAnchorData = new();
     //Load Game Anchor Data
     private static bool isLoadingGameData = false;
     private static List<AnchorData> gameAnchorDataList = new List<AnchorData>();
@@ -131,9 +131,10 @@ public static  class SpatialAnchorManager
     /// 加载房间锚点
     /// </summary>
     /// <returns></returns>
-    public async static UniTask<List<AnchorData>> LoadRoomAnchors()
+    public static async UniTask<List<AnchorData>> LoadRoomAnchors()
     {
         roomData.Clear();
+        await ClearRoomDictionary();
         isLoadingRoomData = true;
         var result = await PXR_MixedReality.QuerySceneAnchorAsync(default);
         Debug.Log($"LoadRoomAnchors: {result.result}");
@@ -145,11 +146,37 @@ public static  class SpatialAnchorManager
                 {
                     AnchorData anchorData = new AnchorData(anchor.Key,anchor.Value);
                     roomData.Add(anchorData);
+                    if (roomAnchorData.ContainsKey(anchorData.Label))
+                    {
+                        var list = roomAnchorData[anchorData.Label];
+                        list.Add(anchorData);
+                        roomAnchorData[anchorData.Label] = list;
+                    }
+                    else
+                    {
+                        List<AnchorData> dataList = new();
+                        dataList.Add(anchorData);
+                        roomAnchorData.Add(anchorData.Label, dataList);
+                    }
                 }
             }  
         }
         isLoadingGameData = false;
         return roomData;
+    }
+    
+    public static List<AnchorData> GetRoomAnchorByLabel(PxrSemanticLabel label)
+    {
+        return roomAnchorData[label];
+    }
+    
+    private static async UniTask ClearRoomDictionary()
+    {
+        foreach (var roomAnchor in roomAnchorData)
+        {
+            roomAnchor.Value.Clear();
+        }
+        roomAnchorData.Clear();
     }
     
     #endregion

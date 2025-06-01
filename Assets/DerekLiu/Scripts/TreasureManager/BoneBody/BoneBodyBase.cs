@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using DerekLiu.Scripts;
-using UnityEngine;
 
 public enum AnimalType
 {
@@ -21,6 +18,14 @@ public class BoneBodyBase : Treasure
         BoneSockets = transform.GetComponentsInChildren<CustomBoneSocket>();
     }
 
+    public void CheckIfFinish()
+    {
+        if (HasAllPartOfSkeleton())
+        {
+            DisableAllSocket();
+        }
+    }
+    
     public bool HasAllPartOfSkeleton()
     {
         foreach (CustomBoneSocket socket in BoneSockets)
@@ -32,5 +37,12 @@ public class BoneBodyBase : Treasure
         }
         return true;
     }
-    
+
+    private void DisableAllSocket()
+    {
+        foreach (CustomBoneSocket socket in BoneSockets)
+        {
+            socket.enabled = false;
+        }
+    }
 }

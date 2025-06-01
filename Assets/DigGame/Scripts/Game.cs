@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using PICOMR.Scripts.ResourcesLoader;
@@ -10,7 +11,6 @@ public class Game : SingletonMono<Game>
     public ResourcesLoader ResourcesLoader;
     public EntityManager EntityManager;
     public PXRInputControllerManager PXRInputControllerManager;
-    public GameObject testUIPrefab;
     
     public override void Awake()
     {
@@ -22,10 +22,15 @@ public class Game : SingletonMono<Game>
     {
         InitManager();
         await InitGameAsync();
-
+        
+        var playerTransform = PXR_Manager.Instance.transform;
+        Vector3 pos = playerTransform.position;
+        pos.y -= 0.5f;
+        pos += playerTransform.right * 50.0f;
+        
+        ResourcesLoader.LoadAsset(102,pos,Quaternion.identity);
         //Instantiate(ResourcesLoader.assets.prefabDictionary[4],new Vector3(0,0,5.0f),Quaternion.identity);
-
-        PXRInputControllerManager.secondaryBtnRight.action.performed += TestInput;
+        //PXRInputControllerManager.secondaryBtnRight.action.performed += TestInput;
     }
 
     private void InitManager()
@@ -33,10 +38,6 @@ public class Game : SingletonMono<Game>
         EntityManager.ResourcesLoader = ResourcesLoader;
     }
     
-    private  void TestInput(InputAction.CallbackContext context)
-    {
-        Debug.LogWarning("Create Prefab3");
-    }
     
     private async Task InitGameAsync()
     {
@@ -48,21 +49,20 @@ public class Game : SingletonMono<Game>
         await StartSpatialAnchorProvider();
         
         var result = await PXR_MixedReality.StartSceneCaptureAsync();
-        
-        var spatialState = await CheckSpatialTrackingStateAsync();
-        if (spatialState && result == PxrResult.SUCCESS)
+        //Load RoomEntity
+        var spatialState = await Game.instance.CheckSpatialTrackingStateAsync();
+        if (spatialState)
         {
-            await EntityManager.LoadRoomEntities();
+            await Game.instance.EntityManager.LoadRoomAnchors();
             Debug.Log("Load Room Entities Finished");
         }
         else
         {
             Debug.LogError($"Init Spatial Tracking State Error");
         }
-        await EntityManager.LoadGameEntities();
     }
 
-    private async UniTask<bool> CheckSpatialTrackingStateAsync()
+    public async UniTask<bool> CheckSpatialTrackingStateAsync()
     {
         await UniTask.CompletedTask;
         return true;
@@ -79,5 +79,9 @@ public class Game : SingletonMono<Game>
         var result0 = await PXR_MixedReality.StartSenseDataProvider(PxrSenseDataProviderType.SpatialAnchor);
         Debug.Log($"StartSenseDataProvider: {result0}");
     }
-    
+
+    private void OnApplicationQuit()
+    {
+        _ =EntityManager.SaveGameEntities();
+    }
 }

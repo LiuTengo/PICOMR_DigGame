@@ -31,14 +31,14 @@ public class UITest : MonoBehaviour
         createPrefab1Btn.GetComponent<XRSimpleInteractable>().lastSelectExited.RemoveListener(CreatePrefab1);
         createPrefab2Btn.GetComponent<XRSimpleInteractable>().lastSelectExited.RemoveListener(CreatePrefab2);
         createPrefab3Btn.GetComponent<XRSimpleInteractable>().lastSelectExited.RemoveListener(CreatePrefab3);
-        deleteEntityBtn.GetComponent<XRSimpleInteractable>().lastSelectExited.RemoveListener(DeleteEntity);
+        //deleteEntityBtn.GetComponent<XRSimpleInteractable>().lastSelectExited.RemoveListener(DeleteEntity);
     }
 
     private void SaveAnchor(SelectExitEventArgs arg0)
     {
         _ = Game.instance.EntityManager.SaveGameEntities();
         //真正持久化数据
-        _ = PersistentLoader.SaveData();
+        //_ = PersistentLoader.SaveData();
     }
     
     private  void ClearAnchor(SelectExitEventArgs arg0)
@@ -49,16 +49,16 @@ public class UITest : MonoBehaviour
     private void CreatePrefab1(SelectExitEventArgs arg0)
     {
         var go = Game.instance.ResourcesLoader.LoadAsset(1,new Vector3(1,1,0),Quaternion.identity) as GameObject; 
-        _ = Game.instance.EntityManager.CreateAndAddEntity(go);
+        //_ = Game.instance.EntityManager.CreateGameEntity(go);
     }
     private  void CreatePrefab2(SelectExitEventArgs arg0)
     {
         var go = Game.instance.ResourcesLoader.LoadAsset(2,new Vector3(0,1,0),Quaternion.identity) as GameObject; 
-         _ = Game.instance.EntityManager.CreateAndAddEntity(go);
+         //_ = Game.instance.EntityManager.CreateGameEntity(go);
     }
     private  void CreatePrefab3(SelectExitEventArgs arg0)
     {
-        var floorList = Game.instance.EntityManager.GetRoomAnchorByLabel(PxrSemanticLabel.Floor);
+        var floorList = SpatialAnchorManager.GetRoomAnchorByLabel(PxrSemanticLabel.Floor);
         if (floorList.Count > 0)
         {
             Vector3 pos = floorList[0].Position;
@@ -66,7 +66,7 @@ public class UITest : MonoBehaviour
             pos.y += 0.2f;
             var go = Game.instance.ResourcesLoader.LoadAsset
                 (3,pos,Quaternion.identity);
-            _ = Game.instance.EntityManager.CreateAndAddEntity(go);
+            _ = Game.instance.EntityManager.CreateGameEntity(go);
         }
          //_ = Game.instance.EntityManager.CreateAndAddEntity(go);
     }
