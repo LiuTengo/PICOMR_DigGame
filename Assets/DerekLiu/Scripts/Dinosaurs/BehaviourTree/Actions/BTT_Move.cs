@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
@@ -6,7 +7,8 @@ using UnityEngine.AI;
 public class BTT_Move : Action
 {
 	public float MoveRadius = 2f;      // 在目标周围多大范围内查找可行走点
-	public int MaxSampleTries = 3;      // 最大尝试次数
+	public int RacialSampleCount = 3;
+	public int RadiusSampleCount = 3;
 	
 	private bool bRunning = false; 
 	private Animator animator;
@@ -26,18 +28,24 @@ public class BTT_Move : Action
 
 		if (!bRunning)
 		{
-			Vector3 destination;
-			if (FindWalkablePositionNearTarget(MoveRadius, out destination))
-			{
-				navMeshAgent.isStopped = false;
-				navMeshAgent.destination = destination;
-				bRunning = true;
-			}
-			else
-			{
-				navMeshAgent.destination = transform.position;
-				bRunning = true;
-			}
+			var pos = FindWalkablePositionNearTarget();
+			
+			navMeshAgent.isStopped = false;
+			navMeshAgent.destination = pos[Random.Range(0, pos.Count)];
+			bRunning = true;
+
+			// Vector3 destination;
+			// if (FindWalkablePositionNearTarget(MoveRadius, out destination))
+			// {
+			// 	navMeshAgent.isStopped = false;
+			// 	navMeshAgent.destination = destination;
+			// 	bRunning = true;
+			// }
+			// else
+			// {
+			// 	navMeshAgent.destination = transform.position;
+			// 	bRunning = true;
+			// }
 		}
 	}
 
@@ -48,10 +56,15 @@ public class BTT_Move : Action
 		{
 			return TaskStatus.Success;
 		}
-		else
+
+		if (navMeshAgent.speed <= 0.00001f)
 		{
-			animator.SetFloat("MoveSpeed", navMeshAgent.velocity.magnitude);
+			return TaskStatus.Success;
 		}
+		
+		animator.SetFloat("MoveSpeed", navMeshAgent.speed);
+		Vector3 dir = Vector3.Normalize(navMeshAgent.velocity);
+		transform.rotation = Quaternion.LookRotation(dir, Vector3.up);
 		return TaskStatus.Running;
 	}
 	
@@ -63,25 +76,28 @@ public class BTT_Move : Action
 		base.OnEnd();
 	}
 	
-	bool FindWalkablePositionNearTarget(float radius, out Vector3 result)
+	List<Vector3> FindWalkablePositionNearTarget()
 	{
-		for (int i = 0; i < MaxSampleTries; i++)
-		{
-			Vector3 randomOffset = Random.insideUnitSphere * radius;
-			randomOffset.y = 0f;
-			Vector3 samplePos = transform.position + randomOffset;
+		float RacialInterval = 2*Mathf.PI / (float)RacialSampleCount;
+		float RadiusInterval = MoveRadius / (float)RadiusSampleCount;
+		List<Vector3> walkablePositions = new List<Vector3>();
 
-			NavMeshHit hit;
-			if (NavMesh.SamplePosition(samplePos, out hit, 10.0f, NavMesh.AllAreas))
+		for (int h = 0; h < RacialSampleCount; h++)
+		{
+			float theta = h * RacialInterval;
+			Vector3 dir = new Vector3(Mathf.Cos(theta),0,Mathf.Sin(theta));
+			for (int v = 1; v < RadiusSampleCount; v++)
 			{
-				result = hit.position;
-				// 可选：确保距离目标不小于最小距离
-				if (Vector3.Distance(result, transform.position) > navMeshAgent.stoppingDistance)
-					return true;
+				Vector3 samplePos = transform.position + dir * v*RadiusInterval;
+				//FIXME: 采样寻路组件中可走的位置
+				NavMesh.SamplePosition(samplePos, out NavMeshHit hit,20.0f,NavMesh.AllAreas);
+				if (hit.hit)
+				{
+					walkablePositions.Add(hit.position);
+				}
 			}
 		}
-
-		result = transform.position;
-		return false;
+		
+		return walkablePositions;
 	}
 }
