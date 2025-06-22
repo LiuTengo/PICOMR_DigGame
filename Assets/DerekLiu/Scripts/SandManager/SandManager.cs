@@ -32,7 +32,7 @@ namespace DerekLiu.Scripts
         {
             ulong id = GetRandomSandID();
             Vector3 position = GetRandomPositionAroundMainLand();
-            position.y += 0.4f;
+            position.y += 1.5f;
             
             var go = Game.instance.ResourcesLoader.LoadAsset(id,position,Quaternion.identity,null,ObjectType.Sand);
             

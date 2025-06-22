@@ -77,7 +77,7 @@ public class StartUIPanel : MonoBehaviour
             var trans = PXR_Manager.Instance.transform;
             Vector3 pos = trans.position;
             pos.y = floorList[0].Position.y;
-            pos += trans.forward * 0.05f;
+            pos += trans.forward * 0.5f;
             
             var go = Game.instance.ResourcesLoader.LoadAsset
                 (101,pos,Quaternion.identity);
@@ -85,9 +85,11 @@ public class StartUIPanel : MonoBehaviour
         }
         else
         {
-            var go = Game.instance.ResourcesLoader.LoadAsset
-                (101,Vector3.zero,Quaternion.identity);
-            _ = Game.instance.EntityManager.CreateGameEntity(go);
+            //var go = Game.instance.ResourcesLoader.LoadAsset
+            //    (101,Vector3.zero,Quaternion.identity);
+            //_ = Game.instance.EntityManager.CreateGameEntity(go);
+            Game.instance.ResourcesLoader.LoadAsset
+                (401,Vector3.one,Quaternion.identity);
             Debug.LogError($"Init Spatial Tracking State Error");
         }
     }

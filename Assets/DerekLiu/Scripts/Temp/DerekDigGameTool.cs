@@ -7,6 +7,7 @@ namespace DerekLiu.Scripts
         Hammer,
         Shovel,
         Brush,
+        Magnifier
     }
     
     public class DerekDigGameTool : MonoBehaviour
